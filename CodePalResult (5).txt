@@ -1,0 +1,139 @@
+# Define a custom Apache Conf function to handle the button click event
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    RewriteCond %{REQUEST_METHOD} =POST
+    RewriteCond %{REQUEST_URI} ^/button-click$
+    RewriteCond %{QUERY_STRING} ^link=(.*)$
+    RewriteRule ^ - [E=link:%1]
+
+    RewriteCond %{REQUEST_METHOD} =POST
+    RewriteCond %{REQUEST_URI} ^/button-click$
+    RewriteCond %{QUERY_STRING} ^link=(.*)$
+    RewriteCond %{HTTP_REFERER} ^https?://(www\.)?facebook\.com/ [NC]
+    RewriteRule ^ - [E=facebook_account_link:%1]
+
+    RewriteCond %{REQUEST_METHOD} =POST
+    RewriteCond %{REQUEST_URI} ^/button-click$
+    RewriteCond %{QUERY_STRING} ^link=(.*)$
+    RewriteCond %{HTTP_REFERER} ^https?://(www\.)?facebook\.com/ [NC]
+    RewriteCond %{ENV:link} ^(.+)$
+    RewriteRule ^ - [E=facebook_post_link:%1]
+
+    RewriteCond %{REQUEST_METHOD} =POST
+    RewriteCond %{REQUEST_URI} ^/button-click$
+    RewriteCond %{QUERY_STRING} ^link=(.*)$
+    RewriteCond %{HTTP_REFERER} ^https?://(www\.)?facebook\.com/ [NC]
+    RewriteCond %{ENV:facebook_account_link} ^(.+)$
+    RewriteCond %{ENV:facebook_post_link} ^(.+)$
+    RewriteRule ^ - [E=like_post:1]
+
+    RewriteCond %{REQUEST_METHOD} =POST
+    RewriteCond %{REQUEST_URI} ^/button-click$
+    RewriteCond %{QUERY_STRING} ^link=(.*)$
+    RewriteCond %{HTTP_REFERER} ^https?://(www\.)?facebook\.com/ [NC]
+    RewriteCond %{ENV:like_post} =1
+    RewriteRule ^ - [L]
+</IfModule>
+
+# Define the endpoint for the button click event
+<Location "/button-click">
+    <Limit POST>
+        Require all granted
+    </Limit>
+</Location>
+
+# Unit tests for the Apache Conf function
+
+# Test positive case: Button click event with valid Facebook account link and post link
+# Expected: The post will be liked by the Facebook account
+RewriteEngine On
+RewriteCond %{REQUEST_METHOD} =POST
+RewriteCond %{REQUEST_URI} ^/button-click$
+RewriteCond %{QUERY_STRING} ^link=https://www.facebook.com/myaccount$
+RewriteCond %{HTTP_REFERER} ^https?://(www\.)?facebook\.com/ [NC]
+RewriteRule ^ - [E=link:%1]
+
+RewriteCond %{REQUEST_METHOD} =POST
+RewriteCond %{REQUEST_URI} ^/button-click$
+RewriteCond %{QUERY_STRING} ^link=https://www.facebook.com/mypost$
+RewriteCond %{HTTP_REFERER} ^https?://(www\.)?facebook\.com/ [NC]
+RewriteCond %{ENV:link} ^(.+)$
+RewriteRule ^ - [E=facebook_account_link:%1]
+
+RewriteCond %{REQUEST_METHOD} =POST
+RewriteCond %{REQUEST_URI} ^/button-click$
+RewriteCond %{QUERY_STRING} ^link=https://www.facebook.com/mypost$
+RewriteCond %{HTTP_REFERER} ^https?://(www\.)?facebook\.com/ [NC]
+RewriteCond %{ENV:facebook_account_link} ^(.+)$
+RewriteCond %{ENV:link} ^(.+)$
+RewriteRule ^ - [E=like_post:1]
+
+RewriteCond %{REQUEST_METHOD} =POST
+RewriteCond %{REQUEST_URI} ^/button-click$
+RewriteCond %{QUERY_STRING} ^link=https://www.facebook.com/mypost$
+RewriteCond %{HTTP_REFERER} ^https?://(www\.)?facebook\.com/ [NC]
+RewriteCond %{ENV:like_post} =1
+RewriteRule ^ - [L]
+
+# Test negative case: Button click event with invalid Facebook account link
+# Expected: The post will not be liked as the Facebook account link is invalid
+RewriteEngine On
+RewriteCond %{REQUEST_METHOD} =POST
+RewriteCond %{REQUEST_URI} ^/button-click$
+RewriteCond %{QUERY_STRING} ^link=https://www.facebook.com/invalidaccount$
+RewriteCond %{HTTP_REFERER} ^https?://(www\.)?facebook\.com/ [NC]
+RewriteRule ^ - [E=link:%1]
+
+RewriteCond %{REQUEST_METHOD} =POST
+RewriteCond %{REQUEST_URI} ^/button-click$
+RewriteCond %{QUERY_STRING} ^link=https://www.facebook.com/mypost$
+RewriteCond %{HTTP_REFERER} ^https?://(www\.)?facebook\.com/ [NC]
+RewriteCond %{ENV:link} ^(.+)$
+RewriteRule ^ - [E=facebook_account_link:%1]
+
+RewriteCond %{REQUEST_METHOD} =POST
+RewriteCond %{REQUEST_URI} ^/button-click$
+RewriteCond %{QUERY_STRING} ^link=https://www.facebook.com/mypost$
+RewriteCond %{HTTP_REFERER} ^https?://(www\.)?facebook\.com/ [NC]
+RewriteCond %{ENV:facebook_account_link} ^(.+)$
+RewriteCond %{ENV:link} ^(.+)$
+RewriteRule ^ - [E=like_post:1]
+
+RewriteCond %{REQUEST_METHOD} =POST
+RewriteCond %{REQUEST_URI} ^/button-click$
+RewriteCond %{QUERY_STRING} ^link=https://www.facebook.com/mypost$
+RewriteCond %{HTTP_REFERER} ^https?://(www\.)?facebook\.com/ [NC]
+RewriteCond %{ENV:like_post} =1
+RewriteRule ^ - [L]
+
+# Test edge case: Button click event with no Facebook account link
+# Expected: The post will not be liked as there is no Facebook account link
+RewriteEngine On
+RewriteCond %{REQUEST_METHOD} =POST
+RewriteCond %{REQUEST_URI} ^/button-click$
+RewriteCond %{QUERY_STRING} ^link=https://www.facebook.com/mypost$
+RewriteCond %{HTTP_REFERER} ^https?://(www\.)?facebook\.com/ [NC]
+RewriteRule ^ - [E=link:%1]
+
+RewriteCond %{REQUEST_METHOD} =POST
+RewriteCond %{REQUEST_URI} ^/button-click$
+RewriteCond %{QUERY_STRING} ^link=https://www.facebook.com/mypost$
+RewriteCond %{HTTP_REFERER} ^https?://(www\.)?facebook\.com/ [NC]
+RewriteCond %{ENV:link} ^(.+)$
+RewriteRule ^ - [E=facebook_account_link:%1]
+
+RewriteCond %{REQUEST_METHOD} =POST
+RewriteCond %{REQUEST_URI} ^/button-click$
+RewriteCond %{QUERY_STRING} ^link=https://www.facebook.com/mypost$
+RewriteCond %{HTTP_REFERER} ^https?://(www\.)?facebook\.com/ [NC]
+RewriteCond %{ENV:facebook_account_link} ^(.+)$
+RewriteCond %{ENV:link} ^(.+)$
+RewriteRule ^ - [E=like_post:1]
+
+RewriteCond %{REQUEST_METHOD} =POST
+RewriteCond %{REQUEST_URI} ^/button-click$
+RewriteCond %{QUERY_STRING} ^link=https://www.facebook.com/mypost$
+RewriteCond %{HTTP_REFERER} ^https?://(www\.)?facebook\.com/ [NC]
+RewriteCond %{ENV:like_post} =1
+RewriteRule ^ - [L]

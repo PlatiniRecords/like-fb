@@ -1,0 +1,142 @@
+import requests
+
+def like_post(button_id: str, account_links: list, post_link: str):
+    """
+    Function to like a post on Facebook for all given account links when a button is tapped.
+
+    Parameters:
+    - button_id: str
+        The ID of the button that triggers the like action.
+    - account_links: list
+        A list of Facebook account links.
+    - post_link: str
+        The link to the post that will be liked.
+
+    Returns:
+    - bool:
+        True if the like action is successful for all accounts, False otherwise.
+
+    Raises:
+    - ValueError:
+        If any of the input parameters are empty or invalid.
+    - requests.exceptions.RequestException:
+        If there is an error while sending the HTTP request to like the post.
+    """
+
+    # Validating the input parameters
+    if not button_id or not account_links or not post_link:
+        raise ValueError("Invalid input parameters.")
+
+    # Initialize a variable to track the success of the like action
+    all_likes_successful = True
+
+    # Iterate over each account link and send a like request for the post
+    for account_link in account_links:
+        try:
+            # Send a POST request to like the post
+            response = requests.post(account_link + button_id, data={"post_link": post_link})
+
+            # Check the response status code to determine if the like action was successful
+            if response.status_code != 200:
+                all_likes_successful = False
+        except requests.exceptions.RequestException:
+            all_likes_successful = False
+
+    return all_likes_successful
+
+# Unit tests for like_post function
+
+import unittest
+from unittest.mock import patch
+
+class TestLikePost(unittest.TestCase):
+
+    # Tests for valid inputs
+    def test_like_post_success(self):
+        """
+        Tests the like_post function with valid inputs and successful like action.
+        """
+        button_id = "like_button"
+        account_links = ["https://facebook.com/account1", "https://facebook.com/account2"]
+        post_link = "https://facebook.com/post"
+        with patch("requests.post") as mock_post:
+            mock_post.return_value.status_code = 200
+            self.assertTrue(like_post(button_id, account_links, post_link))
+
+    def test_like_post_failure(self):
+        """
+        Tests the like_post function with valid inputs and failed like action.
+        """
+        button_id = "like_button"
+        account_links = ["https://facebook.com/account1", "https://facebook.com/account2"]
+        post_link = "https://facebook.com/post"
+        with patch("requests.post") as mock_post:
+            mock_post.return_value.status_code = 500
+            self.assertFalse(like_post(button_id, account_links, post_link))
+
+    # Tests for invalid inputs
+    def test_like_post_empty_button_id(self):
+        """
+        Tests the like_post function with an empty button ID.
+        """
+        button_id = ""
+        account_links = ["https://facebook.com/account1", "https://facebook.com/account2"]
+        post_link = "https://facebook.com/post"
+        with self.assertRaises(ValueError):
+            like_post(button_id, account_links, post_link)
+
+    def test_like_post_empty_account_links(self):
+        """
+        Tests the like_post function with an empty list of account links.
+        """
+        button_id = "like_button"
+        account_links = []
+        post_link = "https://facebook.com/post"
+        with self.assertRaises(ValueError):
+            like_post(button_id, account_links, post_link)
+
+    def test_like_post_empty_post_link(self):
+        """
+        Tests the like_post function with an empty post link.
+        """
+        button_id = "like_button"
+        account_links = ["https://facebook.com/account1", "https://facebook.com/account2"]
+        post_link = ""
+        with self.assertRaises(ValueError):
+            like_post(button_id, account_links, post_link)
+
+    # Tests for network errors
+    def test_like_post_network_error(self):
+        """
+        Tests the like_post function with a network error while sending the like request.
+        """
+        button_id = "like_button"
+        account_links = ["https://facebook.com/account1", "https://facebook.com/account2"]
+        post_link = "https://facebook.com/post"
+        with patch("requests.post") as mock_post:
+            mock_post.side_effect = requests.exceptions.RequestException
+            self.assertFalse(like_post(button_id, account_links, post_link))
+
+# Examples of using the like_post function:
+
+button_id = "like_button"
+account_links = ["https://facebook.com/account1", "https://facebook.com/account2"]
+post_link = "https://facebook.com/post"
+
+# Example 1: Successful like action
+result1 = like_post(button_id, account_links, post_link)
+print(f"All accounts liked the post: {result1}")
+
+# Example 2: Failed like action
+with patch("requests.post") as mock_post:
+    mock_post.return_value.status_code = 500
+    result2 = like_post(button_id, account_links, post_link)
+print(f"All accounts liked the post: {result2}")
+
+# Example 3: Invalid input (empty button ID)
+try:
+    button_id = ""
+    result3 = like_post(button_id, account_links, post_link)
+    print(f"All accounts liked the post: {result3}")
+except ValueError as e:
+    print(f"Error: {e}")

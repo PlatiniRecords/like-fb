@@ -1,0 +1,58 @@
+#!/usr/bin/env zsh
+
+# ===============================================================================
+# FUNCTION: Like Facebook Post
+# ===============================================================================
+
+# like_facebook_post(): A function that likes a Facebook post for a given list of accounts.
+# Parameters:
+# - $1: The button ID that triggers the like action.
+# - $2: An array of Facebook account links.
+# - $3: The link to the post to be liked.
+# Returns:
+# - Outputs the status of the like action for each account.
+# Exception:
+# - Will throw an error if insufficient arguments are provided.
+
+like_facebook_post() {
+    # Ensure the user has provided all required arguments.
+    if [ "$#" -ne 3 ]; then
+        echo "Usage: like_facebook_post [button_id] [account_links] [post_link]"
+        return 1
+    fi
+
+    # Extract the arguments into named variables for clarity.
+    local button_id="$1"
+    local account_links=("${(@f)$2}")  # Convert the account links string to an array.
+    local post_link="$3"
+
+    # Iterate over each account link and simulate the like action.
+    for account_link in "${account_links[@]}"; do
+        echo "Liking post '$post_link' using account '$account_link'..."
+        # Perform the like action using the provided button ID and post link.
+        # Replace the following line with the actual code to perform the like action.
+        # Example: perform_like_action "$button_id" "$account_link" "$post_link"
+    done
+}
+
+# Usage example for the "like_facebook_post" function.
+
+# Usage Example:
+# Simulate liking a Facebook post using a button with ID "likeButton",
+# and a list of Facebook account links ["account1", "account2", "account3"],
+# for the post with link "postLink".
+echo "Simulating like action on Facebook post..."
+like_facebook_post "likeButton" "account1 account2 account3" "postLink"
+
+# EXPECTED OUTPUT:
+# -----------------------------------------------------------------------------
+# Outputs the status of the like action for each account.
+# In this example, it will simulate liking the post "postLink" using the accounts "account1", "account2", and "account3".
+# Replace the simulated action with the actual code to perform the like action.
+
+# Note: The actual implementation of the like action will depend on the specific requirements
+# and the tools or APIs available for interacting with Facebook's platform.
+
+# Other methods and functions can be added below as needed.
+
+# The rest of the code...

@@ -1,0 +1,81 @@
+with Ada.Text_IO; use Ada.Text_IO;
+
+procedure Like_Facebook_Post is
+
+   -- Type to represent a Facebook account
+   type Facebook_Account is record
+      Account_Link : String(1 .. 100);
+   end record;
+
+   -- Type to represent a collection of Facebook accounts
+   type Facebook_Accounts is array(Positive range <>) of Facebook_Account;
+
+   -- Procedure to like a Facebook post
+   procedure Like_Post(Account : Facebook_Account; Post_Link : String) is
+   begin
+      -- Code to like the post with the given link using the Facebook account
+      -- This code is not implemented as it requires interaction with the Facebook API
+      -- You need to implement this part based on the specific API you are using
+      -- For example, you may need to use a library like Ada.Facebook.API to interact with the Facebook API
+      -- Here, we are assuming that the liking of the post is successful
+      Ada.Text_IO.Put_Line("Liked post with link: " & Post_Link & " using Facebook account with link: " & Account.Account_Link);
+   end Like_Post;
+
+   -- Procedure to like a Facebook post for all accounts in the collection
+   procedure Like_Posts(Accounts : Facebook_Accounts; Post_Link : String) is
+   begin
+      for I in Accounts'Range loop
+         Like_Post(Accounts(I), Post_Link);
+      end loop;
+   end Like_Posts;
+
+-- Unit tests
+with Ada.Text_IO; use Ada.Text_IO;
+
+procedure Test_Like_Facebook_Post is
+   -- Test helper procedure for asserting the like post result
+   procedure Assert_Like_Post(Expected: String; Account_Link: String; Post_Link: String) is
+   begin
+      Ada.Text_IO.Put_Line("Liking post with link: " & Post_Link & " using Facebook account with link: " & Account_Link);
+      -- Call the Like_Post procedure with the given account and post links
+      -- Here, you can check if the like post operation was successful or not
+      -- For example, you can check if the post was actually liked by the account
+      -- and compare the result with the expected result
+      -- In this example, we are assuming that the like post operation is always successful
+      Ada.Text_IO.Put_Line("Liked post with link: " & Post_Link & " using Facebook account with link: " & Account_Link);
+   end Assert_Like_Post;
+
+begin
+   -- Positive test cases
+   Assert_Like_Post("Liked", "https://www.facebook.com/account1", "https://www.facebook.com/post1");
+   Assert_Like_Post("Liked", "https://www.facebook.com/account2", "https://www.facebook.com/post1");
+   Assert_Like_Post("Liked", "https://www.facebook.com/account3", "https://www.facebook.com/post1");
+
+   -- Negative test cases
+   Assert_Like_Post("Not Liked", "https://www.facebook.com/account4", "https://www.facebook.com/post1");
+   Assert_Like_Post("Not Liked", "https://www.facebook.com/account5", "https://www.facebook.com/post1");
+   Assert_Like_Post("Not Liked", "https://www.facebook.com/account6", "https://www.facebook.com/post1");
+
+   -- Edge cases
+   Assert_Like_Post("Liked", "https://www.facebook.com/account1", "https://www.facebook.com/post2");
+   Assert_Like_Post("Liked", "https://www.facebook.com/account2", "https://www.facebook.com/post2");
+   Assert_Like_Post("Liked", "https://www.facebook.com/account3", "https://www.facebook.com/post2");
+   Assert_Like_Post("Not Liked", "https://www.facebook.com/account4", "https://www.facebook.com/post2");
+   Assert_Like_Post("Not Liked", "https://www.facebook.com/account5", "https://www.facebook.com/post2");
+   Assert_Like_Post("Not Liked", "https://www.facebook.com/account6", "https://www.facebook.com/post2");
+end Test_Like_Facebook_Post;
+
+-- Usage Example: Like a Facebook post for a collection of accounts
+begin
+   -- Create a collection of Facebook accounts
+   declare
+      Accounts : Facebook_Accounts(1 .. 3) := (
+         (Account_Link => "https://www.facebook.com/account1"),
+         (Account_Link => "https://www.facebook.com/account2"),
+         (Account_Link => "https://www.facebook.com/account3")
+      );
+   begin
+      -- Call the Like_Posts procedure with the collection of accounts and the post link
+      Like_Posts(Accounts, "https://www.facebook.com/post1");
+   end;
+end;

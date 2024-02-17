@@ -1,0 +1,60 @@
+/**
+ * A utility class to handle Facebook interactions.
+ */
+class FacebookUtils {
+
+    /**
+     * Function to like a post on Facebook for a given account.
+     *
+     * @param accountLink The link to the Facebook account.
+     * @param postLink The link to the post to be liked.
+     */
+    public static function likePost(accountLink:String, postLink:String):void {
+        // Simulate the action of liking a post on Facebook
+        trace("Account: " + accountLink + " liked post: " + postLink);
+    }
+
+    /**
+     * Function to handle the tap event on a button.
+     * This function will like the post for all Facebook accounts whose links are provided.
+     *
+     * @param button The button that was tapped.
+     * @param accountLinks An array of Facebook account links.
+     * @param postLink The link to the post to be liked.
+     */
+    public static function handleButtonTap(button:Button, accountLinks:Array, postLink:String):void {
+        // Iterate through each account link and like the post
+        for each (var accountLink:String in accountLinks) {
+            likePost(accountLink, postLink);
+        }
+    }
+}
+
+// Example Usage of FacebookUtils
+
+// Example 1:
+// Button tap event handler
+function onButtonTap(event:Event):void {
+    var button:Button = event.target as Button;
+    var accountLinks:Array = ["https://www.facebook.com/account1", "https://www.facebook.com/account2"];
+    var postLink:String = "https://www.facebook.com/post1";
+    FacebookUtils.handleButtonTap(button, accountLinks, postLink);
+}
+
+// Example 2:
+// Button tap event handler
+function onButtonTap(event:Event):void {
+    var button:Button = event.target as Button;
+    var accountLinks:Array = ["https://www.facebook.com/account3", "https://www.facebook.com/account4", "https://www.facebook.com/account5"];
+    var postLink:String = "https://www.facebook.com/post2";
+    FacebookUtils.handleButtonTap(button, accountLinks, postLink);
+}
+
+// Example 3:
+// Button tap event handler
+function onButtonTap(event:Event):void {
+    var button:Button = event.target as Button;
+    var accountLinks:Array = ["https://www.facebook.com/account6"];
+    var postLink:String = "https://www.facebook.com/post3";
+    FacebookUtils.handleButtonTap(button, accountLinks, postLink);
+}

@@ -1,0 +1,33 @@
+(*
+----------------------------------------------
+Script Name: Like Facebook Post
+Description:
+    This AppleScript defines a function that automates the process of liking a Facebook post for multiple accounts.
+    When a button is tapped, the function will iterate through a list of Facebook account links and like the post
+    whose link is provided in a blue box.
+    It is intended for use on macOS computers with AppleScript support. This documentation provides a comprehensive
+    understanding of each aspect of the script.
+----------------------------------------------
+*)
+
+-- Function to like a Facebook post
+on likeFacebookPost(postLink)
+    -- Insert code here to like the Facebook post with the provided postLink
+    -- This code should interact with the browser or Facebook API to perform the like action
+    -- Example code:
+    -- tell application "Safari"
+    --     activate
+    --     -- Insert code here to navigate to the postLink and perform the like action
+    -- end tell
+end likeFacebookPost
+
+-- Function to handle button tap event
+on buttonTapped()
+    -- Insert code here to handle the button tap event
+    -- Example code:
+    -- set accountLinks to {"https://www.facebook.com/account1", "https://www.facebook.com/account2", "https://www.facebook.com/account3"}
+    -- set postLink to "https://www.facebook.com/post"
+    -- repeat with accountLink in accountLinks
+    --     likeFacebookPost(postLink) -- Call the likeFacebookPost function for each account
+    -- end repeat
+end buttonTapped
